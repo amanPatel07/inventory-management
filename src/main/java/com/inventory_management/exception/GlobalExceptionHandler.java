@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import jakarta.servlet.http.HttpServletRequest;
@@ -37,12 +38,21 @@ public class GlobalExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, "Request validation failed", request, fieldErrors);
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, HttpMessageNotReadableException.class})
+    @ExceptionHandler({
+            IllegalArgumentException.class,
+            HttpMessageNotReadableException.class,
+            MethodArgumentTypeMismatchException.class
+    })
     public ResponseEntity<ApiError> handleBadRequest(
             Exception exception, HttpServletRequest request) {
-        String message = exception instanceof HttpMessageNotReadableException
-                ? "Request body is invalid"
-                : exception.getMessage();
+        String message;
+        if (exception instanceof HttpMessageNotReadableException) {
+            message = "Request body is invalid";
+        } else if (exception instanceof MethodArgumentTypeMismatchException mismatch) {
+            message = "Invalid value for parameter: " + mismatch.getName();
+        } else {
+            message = exception.getMessage();
+        }
         return error(HttpStatus.BAD_REQUEST, message, request);
     }
 
