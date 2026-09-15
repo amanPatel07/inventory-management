@@ -1,8 +1,11 @@
 package com.inventory_management.services.impl;
 
 import com.inventory_management.model.dtos.ProductResponse;
+import com.inventory_management.model.dtos.InventorySummaryResponse;
 import com.inventory_management.model.entity.Product;
+import com.inventory_management.model.enums.StockMovementType;
 import com.inventory_management.repositories.ProductRepository;
+import com.inventory_management.repositories.StockMovementRepository;
 import com.inventory_management.services.ReportService;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +17,13 @@ import java.util.stream.Collectors;
 public class ReportServiceImpl implements ReportService {
 
     private final ProductRepository productRepository;
+    private final StockMovementRepository stockMovementRepository;
 
-    public ReportServiceImpl(ProductRepository productRepository) {
+    public ReportServiceImpl(
+            ProductRepository productRepository,
+            StockMovementRepository stockMovementRepository) {
         this.productRepository = productRepository;
+        this.stockMovementRepository = stockMovementRepository;
     }
 
     public List<ProductResponse> getLowStockProducts() {
@@ -44,6 +51,32 @@ public class ReportServiceImpl implements ReportService {
                                         * product.getPrice()
                         )
                 ));
+    }
+
+    public InventorySummaryResponse getInventorySummary() {
+        List<Product> products = productRepository.findAll();
+        var movements = stockMovementRepository.findAll();
+
+        InventorySummaryResponse response = new InventorySummaryResponse();
+        response.setTotalProducts(products.size());
+        response.setTotalUnitsInStock(products.stream()
+                .mapToLong(Product::getCurrentStock)
+                .sum());
+        response.setLowStockProducts(products.stream()
+                .filter(product -> product.getCurrentStock() <= product.getMinimumStock())
+                .count());
+        response.setTotalInventoryValue(products.stream()
+                .mapToDouble(product -> product.getCurrentStock() * product.getPrice())
+                .sum());
+        response.setTotalStockIn(movements.stream()
+                .filter(movement -> movement.getType() == StockMovementType.IN)
+                .mapToLong(movement -> movement.getQuantity())
+                .sum());
+        response.setTotalStockOut(movements.stream()
+                .filter(movement -> movement.getType() == StockMovementType.OUT)
+                .mapToLong(movement -> movement.getQuantity())
+                .sum());
+        return response;
     }
 
     private ProductResponse toResponse(Product product) {

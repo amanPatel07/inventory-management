@@ -1,7 +1,9 @@
 package com.inventory_management.controllers;
 
 import com.inventory_management.model.dtos.ProductResponse;
+import com.inventory_management.model.dtos.InventorySummaryResponse;
 import com.inventory_management.services.ReportService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,5 +34,11 @@ public class ReportController {
     @GetMapping("/stock-value/category")
     public Map<String, Double> getStockValueByCategory() {
         return reportService.getStockValueByCategory();
+    }
+
+    @Operation(summary = "Get inventory summary")
+    @GetMapping("/summary")
+    public InventorySummaryResponse getInventorySummary() {
+        return reportService.getInventorySummary();
     }
 }
