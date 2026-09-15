@@ -10,6 +10,7 @@ import com.inventory_management.repositories.ProductRepository;
 import com.inventory_management.repositories.StockMovementRepository;
 import com.inventory_management.services.StockService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -27,6 +28,7 @@ public class StockServiceImpl implements StockService {
         this.stockMovementRepository = stockMovementRepository;
     }
 
+    @Transactional
     public void createMovement(StockMovementRequest request) {
 
         Product product = productRepository

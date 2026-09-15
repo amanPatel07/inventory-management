@@ -4,6 +4,7 @@ import com.inventory_management.model.dtos.ProductRequest;
 import com.inventory_management.model.dtos.ProductResponse;
 import com.inventory_management.model.entity.Product;
 import com.inventory_management.model.entity.Supplier;
+import com.inventory_management.exception.ResourceNotFoundException;
 import com.inventory_management.repositories.ProductRepository;
 import com.inventory_management.repositories.SupplierRepository;
 import com.inventory_management.services.ProductService;
@@ -32,7 +33,8 @@ public class ProductServiceImpl implements ProductService {
 
         Supplier supplier = supplierRepository
                 .findById(request.getSupplierId())
-                .orElseThrow(() -> new RuntimeException("Supplier not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                    "Supplier not found: " + request.getSupplierId()));
 
         Product product = new Product();
 
