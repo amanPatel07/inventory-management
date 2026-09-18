@@ -63,6 +63,13 @@ public class GlobalExceptionHandler {
                 "An unexpected error occurred", request);
     }
 
+    @ExceptionHandler()
+    public ResponseEntity<ApiError> handleUserAlreadyExists(
+            UserAlreadyExistsException exception, HttpServletRequest request
+    ) {
+        return  error(HttpStatus.BAD_REQUEST, exception.getMessage(),request);
+    }
+
     private ResponseEntity<ApiError> error(
             HttpStatus status, String message, HttpServletRequest request) {
         return error(status, message, request, Map.of());
