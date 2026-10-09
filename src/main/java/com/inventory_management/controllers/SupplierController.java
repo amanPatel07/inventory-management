@@ -1,7 +1,7 @@
 package com.inventory_management.controllers;
 
-import com.inventory_management.model.dtos.SupplierRequest;
-import com.inventory_management.model.dtos.SupplierResponse;
+import com.inventory_management.models.dtos.SupplierRequest;
+import com.inventory_management.models.dtos.SupplierResponse;
 import com.inventory_management.services.SupplierService;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;

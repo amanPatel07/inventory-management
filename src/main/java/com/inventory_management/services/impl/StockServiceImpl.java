@@ -1,12 +1,12 @@
 package com.inventory_management.services.impl;
 
-import com.inventory_management.exception.InsufficientStockException;
-import com.inventory_management.exception.ResourceNotFoundException;
-import com.inventory_management.model.dtos.StockMovementRequest;
-import com.inventory_management.model.dtos.StockMovementResponse;
-import com.inventory_management.model.entity.Product;
-import com.inventory_management.model.entity.StockMovement;
-import com.inventory_management.model.enums.StockMovementType;
+import com.inventory_management.exceptions.InsufficientStockException;
+import com.inventory_management.exceptions.ResourceNotFoundException;
+import com.inventory_management.models.dtos.StockMovementRequest;
+import com.inventory_management.models.dtos.StockMovementResponse;
+import com.inventory_management.models.entity.Product;
+import com.inventory_management.models.entity.StockMovement;
+import com.inventory_management.models.enums.StockMovementType;
 import com.inventory_management.repositories.ProductRepository;
 import com.inventory_management.repositories.StockMovementRepository;
 import com.inventory_management.services.StockService;

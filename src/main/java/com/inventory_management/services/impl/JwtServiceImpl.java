@@ -1,6 +1,6 @@
 package com.inventory_management.services.impl;
 
-import com.inventory_management.config.JwtProperties;
+import com.inventory_management.configs.JwtProperties;
 import com.inventory_management.services.JwtService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

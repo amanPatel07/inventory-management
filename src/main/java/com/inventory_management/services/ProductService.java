@@ -1,8 +1,7 @@
 package com.inventory_management.services;
 
-import com.inventory_management.model.dtos.ProductRequest;
-import com.inventory_management.model.dtos.ProductResponse;
-import com.inventory_management.model.entity.Product;
+import com.inventory_management.models.dtos.ProductRequest;
+import com.inventory_management.models.dtos.ProductResponse;
 
 import java.util.List;
 

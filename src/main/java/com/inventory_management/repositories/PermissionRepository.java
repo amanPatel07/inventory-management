@@ -1,6 +1,6 @@
 package com.inventory_management.repositories;
 
-import com.inventory_management.model.entity.Permission;
+import com.inventory_management.models.entity.Permission;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

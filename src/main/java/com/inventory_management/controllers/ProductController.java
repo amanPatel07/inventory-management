@@ -1,7 +1,7 @@
 package com.inventory_management.controllers;
 
-import com.inventory_management.model.dtos.ProductRequest;
-import com.inventory_management.model.dtos.ProductResponse;
+import com.inventory_management.models.dtos.ProductRequest;
+import com.inventory_management.models.dtos.ProductResponse;
 import com.inventory_management.services.ProductService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

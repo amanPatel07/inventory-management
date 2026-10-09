@@ -1,9 +1,7 @@
 package com.inventory_management.services;
 
-import com.inventory_management.model.dtos.SupplierRequest;
-import com.inventory_management.model.dtos.SupplierResponse;
-import com.inventory_management.model.entity.Supplier;
-import com.inventory_management.repositories.SupplierRepository;
+import com.inventory_management.models.dtos.SupplierRequest;
+import com.inventory_management.models.dtos.SupplierResponse;
 
 import java.util.List;
 

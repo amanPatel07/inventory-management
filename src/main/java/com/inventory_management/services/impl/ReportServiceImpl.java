@@ -1,9 +1,9 @@
 package com.inventory_management.services.impl;
 
-import com.inventory_management.model.dtos.ProductResponse;
-import com.inventory_management.model.dtos.InventorySummaryResponse;
-import com.inventory_management.model.entity.Product;
-import com.inventory_management.model.enums.StockMovementType;
+import com.inventory_management.models.dtos.ProductResponse;
+import com.inventory_management.models.dtos.InventorySummaryResponse;
+import com.inventory_management.models.entity.Product;
+import com.inventory_management.models.enums.StockMovementType;
 import com.inventory_management.repositories.ProductRepository;
 import com.inventory_management.repositories.StockMovementRepository;
 import com.inventory_management.services.ReportService;

@@ -1,9 +1,9 @@
 package com.inventory_management.services.impl;
 
-import com.inventory_management.exception.ResourceNotFoundException;
-import com.inventory_management.model.dtos.UserResponse;
-import com.inventory_management.model.entity.Permission;
-import com.inventory_management.model.entity.User;
+import com.inventory_management.exceptions.ResourceNotFoundException;
+import com.inventory_management.models.dtos.UserResponse;
+import com.inventory_management.models.entity.Permission;
+import com.inventory_management.models.entity.User;
 import com.inventory_management.repositories.UserRepository;
 import com.inventory_management.services.UserService;
 import org.springframework.stereotype.Service;

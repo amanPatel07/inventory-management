@@ -1,8 +1,8 @@
 package com.inventory_management.services;
 
-import com.inventory_management.model.dtos.StockMovementRequest;
-import com.inventory_management.model.dtos.StockMovementResponse;
-import com.inventory_management.model.enums.StockMovementType;
+import com.inventory_management.models.dtos.StockMovementRequest;
+import com.inventory_management.models.dtos.StockMovementResponse;
+import com.inventory_management.models.enums.StockMovementType;
 
 import java.time.LocalDate;
 import java.util.List;

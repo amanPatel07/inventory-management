@@ -1,10 +1,10 @@
 package com.inventory_management.services.impl;
 
-import com.inventory_management.model.dtos.ProductRequest;
-import com.inventory_management.model.dtos.ProductResponse;
-import com.inventory_management.model.entity.Product;
-import com.inventory_management.model.entity.Supplier;
-import com.inventory_management.exception.ResourceNotFoundException;
+import com.inventory_management.models.dtos.ProductRequest;
+import com.inventory_management.models.dtos.ProductResponse;
+import com.inventory_management.models.entity.Product;
+import com.inventory_management.models.entity.Supplier;
+import com.inventory_management.exceptions.ResourceNotFoundException;
 import com.inventory_management.repositories.ProductRepository;
 import com.inventory_management.repositories.SupplierRepository;
 import com.inventory_management.services.ProductService;

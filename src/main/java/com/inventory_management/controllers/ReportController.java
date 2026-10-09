@@ -1,7 +1,7 @@
 package com.inventory_management.controllers;
 
-import com.inventory_management.model.dtos.ProductResponse;
-import com.inventory_management.model.dtos.InventorySummaryResponse;
+import com.inventory_management.models.dtos.ProductResponse;
+import com.inventory_management.models.dtos.InventorySummaryResponse;
 import com.inventory_management.services.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.security.access.prepost.PreAuthorize;

@@ -1,6 +1,6 @@
 package com.inventory_management.repositories;
 
-import com.inventory_management.model.entity.StockMovement;
+import com.inventory_management.models.entity.StockMovement;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.UUID;
 
