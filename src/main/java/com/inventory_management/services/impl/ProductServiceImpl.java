@@ -1,5 +1,6 @@
 package com.inventory_management.services.impl;
 
+import com.inventory_management.mappers.ProductMapper;
 import com.inventory_management.models.dtos.ProductRequest;
 import com.inventory_management.models.dtos.ProductResponse;
 import com.inventory_management.models.entity.Product;
@@ -17,60 +18,35 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final SupplierRepository supplierRepository;
+    private final ProductMapper productMapper;
 
     public ProductServiceImpl(
             ProductRepository productRepository,
-            SupplierRepository supplierRepository
+            SupplierRepository supplierRepository,
+            ProductMapper productMapper
     ) {
         this.productRepository = productRepository;
         this.supplierRepository = supplierRepository;
+        this.productMapper = productMapper;
     }
 
     public ProductResponse createProduct(ProductRequest request) {
         if (request.getSupplierId() == null) {
             throw new IllegalArgumentException("supplierId must not be null");
         }
-
         Supplier supplier = supplierRepository
                 .findById(request.getSupplierId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                     "Supplier not found: " + request.getSupplierId()));
-
-        Product product = new Product();
-
-        product.setName(request.getName());
-        product.setCategory(request.getCategory());
-        product.setPrice(request.getPrice());
-        product.setMinimumStock(request.getMinimumStock());
-
-        product.setSupplier(supplier);
-
+        Product product = productMapper.buildProduct(request, supplier);
         Product savedProduct = productRepository.save(product);
-
-        return toResponse(savedProduct);
+        return productMapper.toResponse(savedProduct);
     }
 
     public List<ProductResponse> getAllProducts() {
         return productRepository.findAll()
                 .stream()
-                .map(this::toResponse)
+                .map(productMapper::toResponse)
                 .toList();
-    }
-
-    private ProductResponse toResponse(Product product) {
-
-        ProductResponse response = new ProductResponse();
-
-        response.setId(product.getId());
-        response.setName(product.getName());
-        response.setCategory(product.getCategory());
-        response.setPrice(product.getPrice());
-        response.setCurrentStock(product.getCurrentStock());
-        response.setMinimumStock(product.getMinimumStock());
-        if (product.getSupplier() != null) {
-            response.setSupplierId(product.getSupplier().getId());
-        }
-
-        return response;
     }
 }

@@ -2,6 +2,7 @@ package com.inventory_management.services.impl;
 
 import com.inventory_management.exceptions.InsufficientStockException;
 import com.inventory_management.exceptions.ResourceNotFoundException;
+import com.inventory_management.mappers.StockMovementMapper;
 import com.inventory_management.models.dtos.StockMovementRequest;
 import com.inventory_management.models.dtos.StockMovementResponse;
 import com.inventory_management.models.entity.Product;
@@ -24,24 +25,25 @@ public class StockServiceImpl implements StockService {
 
     private final ProductRepository productRepository;
     private final StockMovementRepository stockMovementRepository;
+    private final StockMovementMapper stockMovementMapper;
 
     public StockServiceImpl(
             ProductRepository productRepository,
-            StockMovementRepository stockMovementRepository
+            StockMovementRepository stockMovementRepository,
+            StockMovementMapper stockMovementMapper
     ) {
         this.productRepository = productRepository;
         this.stockMovementRepository = stockMovementRepository;
+        this.stockMovementMapper = stockMovementMapper;
     }
 
     @Transactional
     public void createMovement(StockMovementRequest request) {
-
         Product product = productRepository
                 .findById(request.getProductId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Product not found: " + request.getProductId()
                 ));
-
         if (request.getType() == StockMovementType.IN) {
             product.setCurrentStock(product.getCurrentStock() + request.getQuantity());
         } else if (request.getType() == StockMovementType.OUT) {
@@ -52,17 +54,13 @@ public class StockServiceImpl implements StockService {
             }
             product.setCurrentStock(product.getCurrentStock() - request.getQuantity());
         }
-
         productRepository.save(product);
-
         StockMovement movement = new StockMovement();
-
         movement.setProduct(product);
         movement.setType(request.getType());
         movement.setQuantity(request.getQuantity());
         movement.setReason(request.getReason());
         movement.setCreatedAt(LocalDateTime.now());
-
         stockMovementRepository.save(movement);
     }
 
@@ -71,18 +69,16 @@ public class StockServiceImpl implements StockService {
             UUID productId,
             StockMovementType type,
             LocalDate from,
-            LocalDate to) {
+            LocalDate to
+    ) {
         if ((from == null) != (to == null)) {
             throw new IllegalArgumentException("Both from and to dates must be provided together");
         }
-
         if (from != null && from.isAfter(to)) {
             throw new IllegalArgumentException("From date cannot be after to date");
         }
-
         LocalDateTime fromDateTime = from == null ? null : from.atStartOfDay();
         LocalDateTime toDateTime = to == null ? null : to.plusDays(1).atStartOfDay();
-
         List<StockMovement> movements = stockMovementRepository
             .findAll(Sort.by(Sort.Direction.DESC, "createdAt"))
             .stream()
@@ -94,23 +90,9 @@ public class StockServiceImpl implements StockService {
             .filter(movement -> toDateTime == null
                 || movement.getCreatedAt().isBefore(toDateTime))
             .toList();
-
         return movements
                 .stream()
-                .map(this::toResponse)
+                .map(stockMovementMapper::toResponse)
                 .toList();
     }
-
-    private StockMovementResponse toResponse(StockMovement movement) {
-        StockMovementResponse response = new StockMovementResponse();
-        response.setId(movement.getId());
-        response.setProductId(movement.getProduct().getId());
-        response.setProductName(movement.getProduct().getName());
-        response.setType(movement.getType());
-        response.setQuantity(movement.getQuantity());
-        response.setReason(movement.getReason());
-        response.setCreatedAt(movement.getCreatedAt());
-        return response;
-    }
-
 }

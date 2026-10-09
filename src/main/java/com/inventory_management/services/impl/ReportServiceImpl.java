@@ -1,5 +1,6 @@
 package com.inventory_management.services.impl;
 
+import com.inventory_management.mappers.ProductMapper;
 import com.inventory_management.models.dtos.ProductResponse;
 import com.inventory_management.models.dtos.InventorySummaryResponse;
 import com.inventory_management.models.entity.Product;
@@ -18,19 +19,23 @@ public class ReportServiceImpl implements ReportService {
 
     private final ProductRepository productRepository;
     private final StockMovementRepository stockMovementRepository;
+    private final ProductMapper productMapper;
 
     public ReportServiceImpl(
             ProductRepository productRepository,
-            StockMovementRepository stockMovementRepository) {
+            StockMovementRepository stockMovementRepository,
+            ProductMapper productMapper
+    ) {
         this.productRepository = productRepository;
         this.stockMovementRepository = stockMovementRepository;
+        this.productMapper = productMapper;
     }
 
     public List<ProductResponse> getLowStockProducts() {
         return productRepository.findAll()
                 .stream()
                 .filter(product -> product.getCurrentStock() <= product.getMinimumStock())
-                .map(this::toResponse)
+                .map(productMapper::toResponse)
                 .toList();
     }
 
@@ -56,7 +61,6 @@ public class ReportServiceImpl implements ReportService {
     public InventorySummaryResponse getInventorySummary() {
         List<Product> products = productRepository.findAll();
         var movements = stockMovementRepository.findAll();
-
         InventorySummaryResponse response = new InventorySummaryResponse();
         response.setTotalProducts(products.size());
         response.setTotalUnitsInStock(products.stream()
@@ -76,20 +80,6 @@ public class ReportServiceImpl implements ReportService {
                 .filter(movement -> movement.getType() == StockMovementType.OUT)
                 .mapToLong(movement -> movement.getQuantity())
                 .sum());
-        return response;
-    }
-
-    private ProductResponse toResponse(Product product) {
-
-        ProductResponse response = new ProductResponse();
-
-        response.setId(product.getId());
-        response.setName(product.getName());
-        response.setCategory(product.getCategory());
-        response.setPrice(product.getPrice());
-        response.setCurrentStock(product.getCurrentStock());
-        response.setMinimumStock(product.getMinimumStock());
-
         return response;
     }
 }
