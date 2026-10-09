@@ -9,12 +9,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
+
+        private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
 
     private final UserRepository userRepository;
 
@@ -29,6 +33,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> authorities = new ArrayList<>();
 
         // Add role
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().getName()));
         user.getRole()
                 .getPermissions()
                 .forEach(permission -> authorities.add(
@@ -36,6 +41,17 @@ public class CustomUserDetailsService implements UserDetailsService {
                                 permission.getName()
                         )
                 ));
+
+        logger.info("Current user role: {}, permissions: {}",
+                user.getRole().getName(),
+                user.getRole().getPermissions().stream()
+                        .map(permission -> permission.getName())
+                        .toList());
+        logger.info("Current user authorities: {}",
+                authorities.stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .toList()
+        );
 
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),

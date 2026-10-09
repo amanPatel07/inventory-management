@@ -1,8 +1,8 @@
 package com.inventory_management.controllers;
 
 import com.inventory_management.model.dtos.UserResponse;
-import com.inventory_management.services.AuthService;
 import com.inventory_management.services.UserService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,12 +17,14 @@ public class TestController {
         this.userService = userService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public boolean findUserByEmail(@RequestBody String email) {
         return userService.userExistsByEmail(email);
 
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<UserResponse> getAllUser() {
         return userService.getAllUser();

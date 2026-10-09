@@ -54,6 +54,56 @@ http://localhost:8080/api
 
 Controller mappings must define only resource paths. For example, `/products` is exposed as `/api/products`; controllers must not add `/api` again.
 
+## Authentication
+
+The API uses JWT bearer authentication. Registration and login are public; all other endpoints require an access token.
+
+### Register
+
+```text
+POST /api/auth/register
+```
+
+```json
+{
+	"firstName": "Alex",
+	"lastName": "Morgan",
+	"email": "alex.morgan@example.com",
+	"password": "password123"
+}
+```
+
+Passwords must contain at least 9 characters. The email address must be valid and unique.
+
+### Login
+
+```text
+POST /api/auth/login
+```
+
+```json
+{
+	"username": "alex.morgan@example.com",
+	"password": "password123"
+}
+```
+
+The response contains a JWT, the user's role, and permissions:
+
+```json
+{
+	"token": "eyJ...",
+	"role": "USER",
+	"permissions": []
+}
+```
+
+Send the token with protected requests:
+
+```text
+Authorization: Bearer <token>
+```
+
 ## Architecture
 
 The application follows a conventional layered architecture:
@@ -353,7 +403,6 @@ A Java 21 JDK is required because the Maven compiler target is Java 21. PostgreS
 
 These items are outside the current implementation scope:
 
-- Authentication and authorization.
 - Pagination for large list and history responses.
 - Database-level aggregate queries for very large datasets.
 - Replacing `double` with `BigDecimal` for monetary calculations.

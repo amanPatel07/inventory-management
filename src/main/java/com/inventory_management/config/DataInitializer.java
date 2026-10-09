@@ -48,7 +48,8 @@ public class DataInitializer implements CommandLineRunner {
                 productUpdate,
                 stockRead,
                 stockCreate,
-                stockUpdate
+                stockUpdate,
+                reportRead
         )));
 
         warehouseUser.setPermissions(new HashSet<>(Set.of(

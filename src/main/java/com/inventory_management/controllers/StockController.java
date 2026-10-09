@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +31,7 @@ public class StockController {
         this.stockService = stockService;
     }
 
+    @PreAuthorize("hasAuthority('STOCK_CREATE')")
     @PostMapping("/movement")
     public ResponseEntity<Void> createMovement(@RequestBody @Valid StockMovementRequest request) {
         stockService.createMovement(request);
@@ -39,6 +41,7 @@ public class StockController {
     @Operation(
             summary = "Get stock movement history",
             description = "Returns stock movement history with optional product and type filters. Date filtering requires both from and to.")
+    @PreAuthorize("hasAuthority('STOCK_READ')")
     @GetMapping("/movements")
     public List<StockMovementResponse> getMovements(
             @Parameter(description = "Filter by product UUID")

@@ -5,6 +5,7 @@ import com.inventory_management.model.dtos.ProductResponse;
 import com.inventory_management.services.ProductService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,11 +19,13 @@ public class ProductController {
         this.productService = productService;
     }
 
+    @PreAuthorize("hasAuthority('PRODUCT_CREATE')")
     @PostMapping
     public ProductResponse createProduct(@RequestBody @NotNull @Valid ProductRequest product) {
         return productService.createProduct(product);
     }
 
+    @PreAuthorize("hasAuthority('PRODUCT_READ')")
     @GetMapping
     public List<ProductResponse> getAllProducts() {
         return productService.getAllProducts();
