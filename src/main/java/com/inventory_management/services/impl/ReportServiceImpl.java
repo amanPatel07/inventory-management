@@ -8,6 +8,7 @@ import com.inventory_management.models.enums.StockMovementType;
 import com.inventory_management.repositories.ProductRepository;
 import com.inventory_management.repositories.StockMovementRepository;
 import com.inventory_management.services.ReportService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,21 +16,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
 
     private final ProductRepository productRepository;
     private final StockMovementRepository stockMovementRepository;
     private final ProductMapper productMapper;
-
-    public ReportServiceImpl(
-            ProductRepository productRepository,
-            StockMovementRepository stockMovementRepository,
-            ProductMapper productMapper
-    ) {
-        this.productRepository = productRepository;
-        this.stockMovementRepository = stockMovementRepository;
-        this.productMapper = productMapper;
-    }
 
     public List<ProductResponse> getLowStockProducts() {
         return productRepository.findAll()

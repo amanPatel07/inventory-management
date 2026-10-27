@@ -35,6 +35,13 @@ public class GlobalExceptionHandler {
         return error(HttpStatus.NOT_FOUND, exception.getMessage(), request);
     }
 
+    @ExceptionHandler(PurchaseOrderIllegalStatusException.class)
+    public ResponseEntity<ApiError> handlePurchaseOrderIllegalStatus(
+            PurchaseOrderIllegalStatusException exception, HttpServletRequest request
+    ) {
+        return error(HttpStatus.BAD_REQUEST, exception.getMessage(), request);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleValidation(
             MethodArgumentNotValidException exception, HttpServletRequest request) {

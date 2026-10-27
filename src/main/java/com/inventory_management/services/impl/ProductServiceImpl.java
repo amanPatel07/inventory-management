@@ -9,26 +9,18 @@ import com.inventory_management.exceptions.ResourceNotFoundException;
 import com.inventory_management.repositories.ProductRepository;
 import com.inventory_management.repositories.SupplierRepository;
 import com.inventory_management.services.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final SupplierRepository supplierRepository;
     private final ProductMapper productMapper;
-
-    public ProductServiceImpl(
-            ProductRepository productRepository,
-            SupplierRepository supplierRepository,
-            ProductMapper productMapper
-    ) {
-        this.productRepository = productRepository;
-        this.supplierRepository = supplierRepository;
-        this.productMapper = productMapper;
-    }
 
     public ProductResponse createProduct(ProductRequest request) {
         if (request.getSupplierId() == null) {

@@ -6,14 +6,13 @@ import com.inventory_management.models.dtos.LoginRequest;
 import com.inventory_management.models.dtos.LoginResponse;
 import com.inventory_management.models.dtos.RegisterRequest;
 import com.inventory_management.models.dtos.UserResponse;
-import com.inventory_management.models.entity.Permission;
 import com.inventory_management.models.entity.Role;
 import com.inventory_management.models.entity.User;
 import com.inventory_management.repositories.RoleRepository;
 import com.inventory_management.repositories.UserRepository;
 import com.inventory_management.services.AuthService;
 import com.inventory_management.services.JwtService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,26 +24,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    public AuthServiceImpl(
-            UserRepository userRepository,
-            RoleRepository roleRepository,
-            PasswordEncoder passwordEncoder,
-            JwtService jwtService
-    ) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtService = jwtService;
-    }
+    private final AuthenticationManager authenticationManager;
 
     public UserResponse register(RegisterRequest request) {
 
@@ -66,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
         // Set the default role as "WAREHOUSE_USER"
         Role role = roleRepository.findByName("WAREHOUSE_USER")
                         .orElseThrow(() -> new ResourceNotFoundException("Something went wrong"));
-        newUser.setRole(role);
+        newUser.getRoles().add(role);
         newUser.setCreatedAt(new Date());
         newUser.setModifiedAt(new Date());
         User savedUser = userRepository.save(newUser);
@@ -82,28 +69,17 @@ public class AuthServiceImpl implements AuthService {
             )
         );
 
-        User user = userRepository
+        userRepository
                 .findByEmail(request.getUsername())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
         String token = jwtService.generateJwtToken(authentication);
 
-        Set<String> permissions = user.getRole()
-                .getPermissions()
-                .stream()
-                .map(Permission::getName)
-                .collect(Collectors.toSet());
-
-        return new LoginResponse(
-                token,
-                user.getRole().getName(),
-                permissions
-        );
+        return new LoginResponse(token);
     }
 
     private UserResponse toResponse(User user) {
         UserResponse userResponse = new UserResponse();
-
         userResponse.setId(user.getId());
         userResponse.setEmail(user.getEmail());
         userResponse.setFirstName(user.getFirstName());
@@ -111,17 +87,6 @@ public class AuthServiceImpl implements AuthService {
         userResponse.setCreatedAt(user.getCreatedAt());
         userResponse.setModifiedAt(user.getModifiedAt());
         userResponse.setFullName(user.getFirstName() + " " + user.getLastName());
-        userResponse.setRole(
-                user.getRole().getName()
-        );
-        userResponse.setPermissions(
-                user.getRole()
-                        .getPermissions()
-                        .stream()
-                        .map(Permission::getName)
-                        .collect(Collectors.toSet())
-        );
-
         return userResponse;
     }
 }

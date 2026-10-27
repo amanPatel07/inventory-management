@@ -11,6 +11,7 @@ import com.inventory_management.models.enums.StockMovementType;
 import com.inventory_management.repositories.ProductRepository;
 import com.inventory_management.repositories.StockMovementRepository;
 import com.inventory_management.services.StockService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Sort;
@@ -21,21 +22,12 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class StockServiceImpl implements StockService {
 
     private final ProductRepository productRepository;
     private final StockMovementRepository stockMovementRepository;
     private final StockMovementMapper stockMovementMapper;
-
-    public StockServiceImpl(
-            ProductRepository productRepository,
-            StockMovementRepository stockMovementRepository,
-            StockMovementMapper stockMovementMapper
-    ) {
-        this.productRepository = productRepository;
-        this.stockMovementRepository = stockMovementRepository;
-        this.stockMovementMapper = stockMovementMapper;
-    }
 
     @Transactional
     public void createMovement(StockMovementRequest request) {

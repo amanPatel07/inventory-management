@@ -29,14 +29,19 @@ public class DataInitializer implements CommandLineRunner {
     @Transactional
     public void run(String ...args) {
 
-        //Permission
+        // Product Permissions
         Permission productRead = getOrCreatePermission("PRODUCT_READ");
         Permission productCreate = getOrCreatePermission("PRODUCT_CREATE");
         Permission productUpdate = getOrCreatePermission("PRODUCT_UPDATE");
+        // Stock Permissions
         Permission stockRead = getOrCreatePermission("STOCK_READ");
         Permission stockCreate = getOrCreatePermission("STOCK_CREATE");
         Permission stockUpdate = getOrCreatePermission("STOCK_UPDATE");
+        // Report Permissions
         Permission reportRead = getOrCreatePermission("REPORT_READ");
+        // Purchase Order
+        Permission purchaseOrder = getOrCreatePermission("CREATE_PURCHASE_ORDER");
+        Permission approvePurchaseOrder = getOrCreatePermission("APPROVE_PURCHASE_ORDER");
 
         //Role
         Role admin = getOrCreateRole("ADMIN");
@@ -49,14 +54,18 @@ public class DataInitializer implements CommandLineRunner {
                 stockRead,
                 stockCreate,
                 stockUpdate,
-                reportRead
+                reportRead,
+                purchaseOrder,
+                approvePurchaseOrder
         )));
 
         warehouseUser.setPermissions(new HashSet<>(Set.of(
                 productRead,
                 stockRead,
                 stockCreate,
-                reportRead
+                reportRead,
+                purchaseOrder,
+                approvePurchaseOrder
         )));
 
         // Save roles

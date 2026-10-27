@@ -16,8 +16,6 @@ public class UserResponse {
     private String lastName;
     private String fullName;
     private String email;
-    private String role;
-    private Set<String> permissions;
     private Date createdAt;
     private Date modifiedAt;
 

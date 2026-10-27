@@ -1,22 +1,22 @@
 package com.inventory_management.services.impl;
 
+import com.inventory_management.mappers.SupplierMapper;
 import com.inventory_management.models.dtos.SupplierRequest;
 import com.inventory_management.models.dtos.SupplierResponse;
 import com.inventory_management.models.entity.Supplier;
 import com.inventory_management.repositories.SupplierRepository;
 import com.inventory_management.services.SupplierService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class SupplierServiceImpl implements SupplierService {
 
     private final SupplierRepository supplierRepository;
-
-    public SupplierServiceImpl(SupplierRepository supplierRepository) {
-        this.supplierRepository = supplierRepository;
-    }
+    private final SupplierMapper supplierMapper;
 
     public SupplierResponse createSupplier(SupplierRequest request) {
 
@@ -28,26 +28,13 @@ public class SupplierServiceImpl implements SupplierService {
 
         Supplier savedSupplier = supplierRepository.save(supplier);
 
-        return toResponse(savedSupplier);
+        return supplierMapper.toResponse(savedSupplier);
     }
 
     public List<SupplierResponse> getSuppliers() {
         return supplierRepository.findAll()
                 .stream()
-                .map(this::toResponse)
+                .map(supplierMapper::toResponse)
                 .toList();
-    }
-
-    private SupplierResponse toResponse(Supplier supplier) {
-
-        SupplierResponse response = new SupplierResponse();
-
-        response.setId(supplier.getId());
-        response.setName(supplier.getName());
-        response.setEmail(supplier.getEmail());
-        response.setPhone(supplier.getPhone());
-
-        return response;
-
     }
 }
